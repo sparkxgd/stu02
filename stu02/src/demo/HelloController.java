@@ -1,4 +1,8 @@
 package demo;
+import java.util.List;
+
+import org.bson.Document;
+
 import com.jfinal.core.Controller;
 public class HelloController extends Controller {
     public void index() {
@@ -23,10 +27,18 @@ public class HelloController extends Controller {
 	   String username=getPara("username");
 	   String password=getPara("password");
 	   //2、从mongodb数据库获取用户名和密码
-	   String user="201702";
-	   String pw="123";
+	   
+	   MongoModel usermodel=new MongoModel("student", "userinfo");
+	   
+	   Document query=new Document();
+	   query.append("username", username);
+	   
+	   List<Document> list= usermodel.find(query);
+	   
 	   //3、判断用户名是否存在
-	   if(username.equals(user)) {//存在用户名
+	   if(list.size()>0) {//存在用户名
+		   //获取数据库的密码
+		   String pw=list.get(0).getString("passsword");
 		   //判断密码
 		   if(password.equals(pw)) {//密码正确
 			   //进入主页面

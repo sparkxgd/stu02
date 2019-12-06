@@ -11,13 +11,13 @@ public class MongoDBJDBC{
    public static void main( String args[] ){
       try{   
          // 连接到 mongodb 服务
-         MongoClient mongoClient = new MongoClient( "192.168.76.134" , 27017 );
+         MongoClient mongoClient = new MongoClient( "120.79.42.237" , 27017 );
          
          // 连接到数据库
          MongoDatabase mongoDatabase = mongoClient.getDatabase("student");  
          System.out.println("Connect to database successfully");
          
-         MongoCollection<Document> collection = mongoDatabase.getCollection("test");
+         MongoCollection<Document> collection = mongoDatabase.getCollection("stuinfo");
          System.out.println("集合 test 选择成功");
          
          //检索所有文档  

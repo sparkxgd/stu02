@@ -1,6 +1,7 @@
 package demo;
 
 import org.bson.Document;
+
 import com.mongodb.MongoClient;
 import com.mongodb.client.FindIterable;
 import com.mongodb.client.MongoCollection;
@@ -18,6 +19,12 @@ public class MongoDBJDBC{
          System.out.println("Connect to database successfully");
          
          MongoCollection<Document> collection = mongoDatabase.getCollection("test");
+//         MongoClient mongoClient = new MongoClient( "120.79.42.237" , 27017 );
+         
+         // 连接到数据库
+//         MongoDatabase mongoDatabase = mongoClient.getDatabase("student");  
+         
+//         MongoCollection<Document> collection = mongoDatabase.getCollection("stuinfo");
          System.out.println("集合 test 选择成功");
          
          //检索所有文档  

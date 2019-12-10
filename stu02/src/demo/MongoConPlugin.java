@@ -20,7 +20,7 @@ public class MongoConPlugin implements IPlugin{
 	@Override
 	public boolean start() {
 		// 连接到 mongodb 服务
-        this.mongoClient = new MongoClient(ip , port );
+        mongoClient = new MongoClient(ip , port );
 		return true;
 	}
 

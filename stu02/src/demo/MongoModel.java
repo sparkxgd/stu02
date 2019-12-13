@@ -9,6 +9,7 @@ import com.mongodb.client.FindIterable;
 import com.mongodb.client.MongoCollection;
 import com.mongodb.client.MongoCursor;
 import com.mongodb.client.MongoDatabase;
+import com.mongodb.client.model.Filters;
 
 /**
  * 管理数据的增删查改
@@ -56,5 +57,23 @@ public class MongoModel {
          
 		return docs;
 	}
-	
+	/**
+	 * 保存
+	 * @param data
+	 */
+	public void insertOne(Document data) {
+		collection.insertOne(data);
+	}
+	/**
+	 * 删除
+	 */
+	public void deleteOne(Document query) {
+		collection.deleteOne(query);
+	}
+	/**
+	 * 更新
+	 */
+	public void updateOne(Document data) {
+		collection.updateOne(Filters.eq("no", data.get("no")), new Document("$set",data));
+	}
 }

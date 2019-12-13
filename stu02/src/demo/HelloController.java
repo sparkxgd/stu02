@@ -61,5 +61,33 @@ public class HelloController extends Controller {
    public void openmain() {
 	   render("main.html");
    }
+   /**
+    * 获取学生信息列表
+    */
+   public void getstudents() {
+	   MongoModel stus=new MongoModel("student", "studentinfo");
+	   Document query=new Document();
+	   
+	   List<Document> list=stus.find(query);
+	   
+	   setAttr("list", list);
+	   renderJson();
+   }
+   
+   /**
+    * 打开添加信息页面
+    */
+   public void openadd() {
+	   render("add.html");
+   }
+   /**
+    * 保存信息
+    */
+   public void add() {
+	   String no=getPara("no");
+	   String name=getPara("name");
+	   String sex=getPara("sex");
+	   int age=getParaToInt("age");
+   }
    
 }

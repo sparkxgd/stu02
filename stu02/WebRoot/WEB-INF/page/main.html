@@ -3,6 +3,58 @@
 <head>
 <meta charset="UTF-8">
 <title>主页面</title>
+<script type="text/javascript" src="../js/jquery-3.4.1.min.js"></script>
+<script type="text/javascript">
+
+$.ajax({
+	url:'getstudents',
+	type:'post',
+	dataType:'json',
+	data:{},
+	success:function(r){
+		var result=r.list;
+		var arr=[];
+		for(var i=0;i<result.length;i++){
+			var no=result[i].no;
+			var name=result[i].name;
+			var sex=result[i].sex;
+			var age=result[i].age;
+			
+			arr.push("<tr>");
+			arr.push("<td>");
+			arr.push(no);
+			arr.push("</td>");
+			
+			arr.push("<td>");
+			arr.push(name);
+			arr.push("</td>");
+			
+			arr.push("<td>");
+			arr.push(sex);
+			arr.push("</td>");
+			
+			arr.push("<td>");
+			arr.push(age);
+			arr.push("</td>");
+			
+			arr.push("</tr>");
+			
+		}
+		
+		$('tbody').append(arr.join(''));
+		
+	}
+});
+
+</script>
+
+
+
+<style type="text/css">
+	table tr td{
+		border: 1px solid;
+	}
+</style>
 </head>
 <body>
 这就是我们的主页面！！！<br>
@@ -10,6 +62,25 @@
 ===============================<br>
 显示mongodb数据库的数据信息<br>
 ================================<br>
+
+<a href="openadd">添加</a>
+
+<table>
+
+<thead>
+	<tr>
+		<td>学号</td>
+		<td>姓名</td>
+		<td>性别</td>
+		<td>年龄</td>
+	</tr>
+</thead>
+
+<tbody>
+	
+</tbody>
+
+</table>
 
 </body>
 </html>

@@ -88,6 +88,26 @@ public class HelloController extends Controller {
 	   String name=getPara("name");
 	   String sex=getPara("sex");
 	   int age=getParaToInt("age");
+	   Document data=new Document();
+	   data.append("no", no);
+	   data.append("sex", sex);
+	   data.append("age", age);
+	   data.append("name", name);
+	   
+	   MongoModel m=new MongoModel("student", "studentinfo");
+	   m.insertOne(data);
+	   
+	   redirect("getstudents");
    }
-   
+   /**
+    * É¾³ý
+    */
+   public void delete() {
+	   String no=getPara("no");
+	   Document query=new Document();
+	   query.append("no", no);
+	   MongoModel m=new MongoModel("student", "studentinfo");
+	   m.deleteOne(query);
+	   
+   }
 }

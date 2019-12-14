@@ -1,113 +1,170 @@
 package demo;
+
 import com.jfinal.core.Controller;
 import java.util.List;
 import org.bson.Document;
+
 public class HelloController extends Controller {
-    public void index() {
-       renderText("Hello JFinal World.");
-    }
-   public void mongodbtest() {
-	   render("querylist.html");
-   }
-   /**
-    * 打开登录页面
-    */
-   public void openlogin() {
-   	render("login.html");
-   }
-   /**
-    * 登录
-    * 1、判断用户名
-    * 2、判断密码
-    */
-   public void login() {
-	   //1、获取页面用户名和密码
-	   String username=getPara("username");
-	   String password=getPara("password");
-	   //2、从mongodb数据库获取用户名和密码
-	   
-	   MongoModel usermodel=new MongoModel("student", "userinfo");
-	   
-	   Document query=new Document();
-	   query.append("username", username);
-	   
-	   List<Document> list= usermodel.find(query);
-	   
-	   //3、判断用户名是否存在
-	   if(list.size()>0) {//存在用户名
-		   //获取数据库的密码
-		   String pw=list.get(0).getString("passsword");
-		   //判断密码
-		   if(password.equals(pw)) {//密码正确
-			   //进入主页面
-			   setAttr("result", 0);
-			   renderJson();
-		   }else {
-			   //提示密码错误，重新输入密码
-			   setAttr("result", 1);
-			   renderJson();
-		   }
-		   
-	   }else {//不存在用户名
-		   //提示用户名不存在，重新输入用户名和密码
-		   setAttr("result", -1);
-		   renderJson();
-	   }
-	   
-   }
-   /**
-    * 打开主页面
-    */
-   public void openmain() {
-	   render("main.html");
-   }
-   /**
-    * 获取学生信息列表
-    */
-   public void getstudents() {
-	   MongoModel stus=new MongoModel("student", "studentinfo");
-	   Document query=new Document();
-	   
-	   List<Document> list=stus.find(query);
-	   
-	   setAttr("list", list);
-	   renderJson();
-   }
-   
-   /**
-    * 打开添加信息页面
-    */
-   public void openadd() {
-	   render("add.html");
-   }
-   /**
-    * 保存信息
-    */
-   public void add() {
-	   String no=getPara("no");
-	   String name=getPara("name");
-	   String sex=getPara("sex");
-	   int age=getParaToInt("age");
-	   Document data=new Document();
-	   data.append("no", no);
-	   data.append("sex", sex);
-	   data.append("age", age);
-	   data.append("name", name);
-	   
-	   MongoModel m=new MongoModel("student", "studentinfo");
-	   m.insertOne(data);
-	   
-	   redirect("getstudents");
-   }
-   /**
-    * 删除
-    */
-   public void delete() {
-	   String no=getPara("no");
-	   Document query=new Document();
-	   query.append("no", no);
-	   MongoModel m=new MongoModel("student", "studentinfo");
-	   m.deleteOne(query);
-	   
-   }
+	public void index() {
+		renderText("Hello JFinal World.");
+	}
+
+	public void mongodbtest() {
+		render("querylist.html");
+	}
+
+	/**
+	 * 打开登录页面
+	 */
+	public void openlogin() {
+		render("login.html");
+	}
+
+	/**
+	 * 登录 1、判断用户名 2、判断密码
+	 */
+	public void login() {
+		// 1、获取页面用户名和密码
+		String username = getPara("username");
+		String password = getPara("password");
+		// 2、从mongodb数据库获取用户名和密码
+
+		MongoModel usermodel = new MongoModel("student", "userinfo");
+
+		Document query = new Document();
+		query.append("username", username);
+
+		List<Document> list = usermodel.find(query);
+
+		// 3、判断用户名是否存在
+		if (list.size() > 0) {// 存在用户名
+			// 获取数据库的密码
+			String pw = list.get(0).getString("passsword");
+			// 判断密码
+			if (password.equals(pw)) {// 密码正确
+				// 进入主页面
+				setAttr("result", 0);
+				renderJson();
+			} else {
+				// 提示密码错误，重新输入密码
+				setAttr("result", 1);
+				renderJson();
+			}
+
+		} else {// 不存在用户名
+				// 提示用户名不存在，重新输入用户名和密码
+			setAttr("result", -1);
+			renderJson();
+		}
+
+	}
+
+	/**
+	 * 打开主页面
+	 */
+	public void openmain() {
+		render("main.html");
+	}
+
+	/**
+	 * 获取学生信息列表
+	 */
+	public void getstudents() {
+		String no = getPara("no");
+		MongoModel stus = new MongoModel("student", "studentinfo");
+		
+		Document query = new Document();
+
+		if(!no.equals("")) {
+			query.append("no", no);
+		}
+		List<Document> list = stus.find(query);
+
+		setAttr("list", list);
+		renderJson();
+	}
+
+	/**
+	 * 打开添加信息页面
+	 */
+	public void openadd() {
+		render("add.html");
+	}
+
+	/**
+	 * 保存信息
+	 */
+	public void add() {
+		String no = getPara("no");
+		String name = getPara("name");
+		String sex = getPara("sex");
+		int age = getParaToInt("age");
+
+		// 判断数据库中是否已经存在学号
+		MongoModel m = new MongoModel("student", "studentinfo");
+		List<Document> list = m.find(new Document("no", no));
+		if (list.size() > 0) {// 说明已经存在学号
+			setAttr("result", -1);
+		} else {
+			Document data = new Document();
+			data.append("no", no);
+			data.append("sex", sex);
+			data.append("age", age);
+			data.append("name", name);
+			m.insertOne(data);
+			setAttr("result", 0);// 正常保存
+		}
+		renderJson();
+	}
+
+	/**
+	 * 删除
+	 */
+	public void delete() {
+		String no = getPara("no");
+		Document query = new Document();
+		query.append("no", no);
+		MongoModel m = new MongoModel("student", "studentinfo");
+		m.deleteOne(query);
+		redirect("openmain");
+
+	}
+
+	/**
+	 * 打开编辑页面
+	 */
+	public void openedit() {
+		String no = getPara("no");
+		setAttr("no", no);
+		renderFreeMarker("stuedit.html");
+	}
+
+	/**
+	 * 获取学生信息，用来编辑
+	 */
+	public void getstubyno() {
+		String no = getPara("no");
+		MongoModel m = new MongoModel("student", "studentinfo");
+		List<Document> list = m.find(new Document("no", no));
+		setAttr("m", list.get(0));
+		renderJson();
+	}
+
+	public void updatastu() {
+
+		String no = getPara("no");
+		String name = getPara("name");
+		String sex = getPara("sex");
+		int age = getParaToInt("age");
+
+		MongoModel m = new MongoModel("student", "studentinfo");
+		Document data = new Document();
+		data.append("no", no);
+		data.append("sex", sex);
+		data.append("age", age);
+		data.append("name", name);
+		m.updateOne(data);
+		redirect("openmain");
+
+	}
 }
